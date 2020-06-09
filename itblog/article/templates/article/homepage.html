@@ -2,11 +2,13 @@
 
 {% block content %}
 
-<h2>Articles:</h2>
-<ul>
-{% for a in  articles %}
-    <li>{{ a.title }}</li>
-    <li>{{ a.text }}</li>
-{% endfor %}
-</ul>
-{% endblock %}
+    <h2>Статьи</h2>
+    <hr>
+    {% for a in  articles %}
+        <h3>{{ a.title }}</h3> 
+        <div>{{ a.text }}</div>
+        <i>Автор - {{ a.author }}</i>
+        <b>Прочитано: {{ a.readers.count}}</b>
+    {% endfor %}
+
+    {% endblock %} 
