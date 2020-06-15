@@ -16,10 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from article.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage, name="homepage"),
-    path('authors/', authors, name="authors"), #при смене эндпоинта/ без изменения имени код не поломается
-    path("users/", users, name="users_list")
-]
+    path('authors/', authors, name="authors"),
+    path("profile/<int:pk>/", profile, name="profile"),
+    path("author/add/", add_author, name="add-author"), #при смене эндпоинта без изменения имени код не поломается
+    path("users/", users, name="users-list"),
+    path("article/<int:pk>/", article, name="article"),
+    path("article/edit/<int:pk>/", edit_article, name="edit-article"), # 2ое это имя функции, к-я обраб этот запрос. 3е это во views
+    path("article/add/", add_article, name="add-article"),
+]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

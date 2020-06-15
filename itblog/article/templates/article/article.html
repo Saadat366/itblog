@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>{{ article.title }}</h2>
+    <div>{{ article.text }}</div>
+    <i>Автор - {{ article.author }}</i>
+    <h3>Понравилось: {{ article.likes }}</h3>
+    <h4>Прочитало: {{ article.readers.count }}</h4>
+    <ul>
+    {% for reader in article.readers.all %}
+        <li>{{ reader }}</li>
+    {% endfor %}
+    </ul>
+    <hr>
+    <a href="{% url 'edit-article' article.id %}" class="btn btn-lg btn-warning">Редактировать</a>
+    <br>
+    <br>
+    <form method="POST">
+        {% csrf_token %} 
+        <button class="btn btn-lg btn-danger">Удалить</button>
+    </form>
+
+
+
+{% endblock %}

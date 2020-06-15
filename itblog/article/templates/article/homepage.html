@@ -5,10 +5,15 @@
     <h2>Статьи</h2>
     <hr>
     {% for a in  articles %}
-        <h3>{{ a.title }}</h3> 
-        <div>{{ a.text }}</div>
-        <i>Автор - {{ a.author }}</i>
+        <h3>
+            <a href="{% url 'article' a.id %}">{{ a.title }}</a>
+        </h3>
+        <a href="{% url 'profile' a.author.pk %}">Автор - {{ a.author }}</a> 
+        <br>
         <b>Прочитано: {{ a.readers.count}}</b>
+        <br>
+        <b>Понравилось: {{ a.likes }}</b>
+        <hr>
     {% endfor %}
 
-    {% endblock %} 
+{% endblock %}

@@ -19,10 +19,18 @@
                 <a class="nav-link" href="{% url 'authors' %}">Авторы</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'users_list' %}">Users</a>
+                <a class="nav-link" href="{% url 'users-list' %}">Users</a>
             </li>
-          </ul>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Добавить</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'add-article' %}">Статью</a>
+                    <a class="dropdown-item" href="{% url 'add-author' %}">Автора</a>
+                </div>
+            </li>
+        </ul>
     </nav>
+    <br>
     <div class="container">
     {% block content %}
     {% endblock %}

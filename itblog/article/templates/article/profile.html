@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>Псевдоним: {{ author.name }}</h2>
+    <br>
+    <img src="{{ author.photo.url }}" width="60%">
+    <br>
+    <hr>
+    <h3>Количество публикаций: {{ author.articles.count }}</h3>
+
+{% endblock %} 
