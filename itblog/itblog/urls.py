@@ -27,6 +27,8 @@ urlpatterns = [
     path("author/add/", add_author, name="add-author"), #при смене эндпоинта без изменения имени код не поломается
     path("users/", users, name="users-list"),
     path("article/<int:pk>/", article, name="article"),
-    path("article/edit/<int:pk>/", edit_article, name="edit-article"), # 2ое это имя функции, к-я обраб этот запрос. 3е это во views
+    path("article/edit/<int:id>/", edit_article, name="edit-article"), # 2ое это имя функции, к-я обраб этот запрос. 3е см base.html
     path("article/add/", add_article, name="add-article"),
+    path("comment/<int:id>/edit/", edit_comment, name="edit-comment"),
+    path("comment/<int:id>/delete/", delete_comment, name="delete-comment"),
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

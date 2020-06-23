@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
 
     <h2>{{ article.title }}</h2>
+    {% if article.picture %}
+        <img src="{{ article.picture.url }}" width="90%">
+    {% endif %}
     <div>{{ article.text }}</div>
     <i>Автор - {{ article.author }}</i>
-    <h3>Понравилось: {{ article.likes }}</h3>
+    <hr>
+    <h4>Дата публикации: {{ article.published }}</h4>
+    <h4>Последнее изменение: {{ article.updated }}</h4>
+    <h4>Понравилось: {{ article.likes }}</h4>
+    <h4>Просмотрели: {{ article.views }}</h4>
     <h4>Прочитало: {{ article.readers.count }}</h4>
     <ul>
     {% for reader in article.readers.all %}
@@ -18,9 +26,23 @@
     <br>
     <form method="POST">
         {% csrf_token %} 
-        <button class="btn btn-lg btn-danger">Удалить</button>
+        <button name="delete_btn" class="btn btn-lg btn-danger">Удалить</button>
     </form>
-
-
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button name="comment_btn" class="btn btn-primary">Добавить</button>
+    </form>
+    <h4>Комментарии</h4>
+    {% for comment in article.comments.all %}
+        <h4>{{ comment.text }}</h4>
+        <i>{{ comment.user.username }}</i>
+        <p>
+            <a href="{% url 'edit-comment' comment.id %}">Редактировать</a> |
+            <a href="{% url 'delete-comment' comment.id %}">Удалить</a>
+        </p>
+        <hr>
+    {% endfor %}
 
 {% endblock %}
