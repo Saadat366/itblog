@@ -8,7 +8,12 @@ def homepage(request):
     # article = Article.objects.raw("SELECT * FROM article_article WHERE active = 1") нужно соблюдать меры от инъекций 
     if request.method == "POST":
         key = request.POST.get("key_word")
-        articles = Article.objects.filter(active=True).filter(title__contains=key) | Article.objects.filter(active=True).filter(text__contains=key) | Article.objects.filter(active=True).filter(tag__name__contains=key)
+        articles = Article.objects.filter(active=True).filter(
+            title__contains=key) | Article.objects.filter(active=True).filter(
+                text__contains=key) | Article.objects.filter(active=True).filter(
+                    tag__name__contains=key) | Article.objects.filter(active=True).filter(
+                        author__name__contains=key) | Article.objects.filter(active=True).filter(
+                            comments__text__contains=key)
     else:
         articles = Article.objects.filter(active=True).order_by("-likes")
     
