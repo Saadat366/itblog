@@ -1,5 +1,6 @@
 db.sqlite3
 sqlite.exe
 media
-venv
+../venv
 __pycache__
+venv
