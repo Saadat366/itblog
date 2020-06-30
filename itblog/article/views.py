@@ -2,18 +2,21 @@ from django.shortcuts import render, redirect
 from .models import Article, Author
 from django.contrib.auth.models import User
 from .forms import *
+from django.db.models import Q
+
 
 def homepage(request):
-    articles = Article.objects.filter(active=True).order_by("-likes") #"-likes"[:3]
     # article = Article.objects.raw("SELECT * FROM article_article WHERE active = 1") нужно соблюдать меры от инъекций 
-    if request.method == "POST":
-        key = request.POST.get("key_word")
-        articles = Article.objects.filter(active=True).filter(
-            title__contains=key) | Article.objects.filter(active=True).filter(
-                text__contains=key) | Article.objects.filter(active=True).filter(
-                    tag__name__contains=key) | Article.objects.filter(active=True).filter(
-                        author__name__contains=key) | Article.objects.filter(active=True).filter(
-                            comments__text__contains=key)
+    if "key_word" in request.GET:
+        key = request.GET.get("key_word")
+        # articles = Article.objects.filter(active=True).filter(
+        #     title__contains=key) | Article.objects.filter(active=True).filter(
+        #         text__contains=key) | Article.objects.filter(active=True).filter(
+        #             tag__name__contains=key) | Article.objects.filter(active=True).filter(
+        #                 author__name__contains=key) | Article.objects.filter(active=True).filter(
+        #                     picture__contains=key)
+        article = Article.objects.filter(Q(active=True), 
+            Q(title__contains=key) | Q(text__contains=key) | Q(tag__name__contains=key) | Q(author__name__contains=key) | Q(picture__contains=key))
     else:
         articles = Article.objects.filter(active=True).order_by("-likes")
     
@@ -48,7 +51,26 @@ def add_article(request):
     if request.method == "POST":
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            #запрашиваемый пользователь становится автором
+            if not Author.objects.filter(user=request.user):
+                author = Author(user=request.user, name=request.user.username)
+                author.save()
+            else:
+                author = Author.objects.get(user=request.user)
+           
+            #добавляем статью      
+            article = Article()
+            article.author = author
+            article.title = form.cleaned_data["title"]
+            article.text = form.cleaned_data["text"]            
+            article.picture = form.cleaned_data["picture"] 
+            article.save()
+
+            tags = form.cleaned_data["tags"]
+            for tag in tags.split(","):
+                obj, created = Tag.objects.get_or_create(name=tag) #в obj вернется сам объект созданный или полученный. в created true если создался, false если нет 
+                article.tag.add(obj)
+            article.save()
             return render(request, "success.html")
         # article = Article()
         # article.title = request.POST.get("title")
@@ -67,9 +89,17 @@ def edit_article(request, id):
 
     if request.method == "POST":
         form = ArticleForm(request.POST, request.FILES, instance=article)
-        if form.is_valid():
-            form.save()
-            return render(request, "success.html")
+        if form.is_valid():    
+            article.title = form.cleaned_data["title"]
+            article.text = form.cleaned_data["text"]            
+            article.picture = form.cleaned_data["picture"] 
+            article.save()
+            tags = form.cleaned_data["tags"]
+            for tag in tags.split(","):
+                obj, created = Tag.objects.get_or_create(name=tag) #в obj вернется сам объект созданный или полученный. в created true если создался, false если нет 
+                article.tag.add(obj)
+            article.save()
+            return redirect('article', id=article.id)
 
     form = ArticleForm(instance=article) 
     return render(request, "article/add_article.html", {"form": form})

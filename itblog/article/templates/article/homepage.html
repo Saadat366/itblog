@@ -5,7 +5,7 @@
     <h2>Статьи</h2>
     <hr>
     {% for a in  articles %}
-        <h3>
+        <h3 id="article{{ a.id }}">
             <a href="{% url 'article' a.id %}">{{ a.title }}</a>
         </h3>
         <a href="{% url 'profile' a.author.pk %}">Автор - {{ a.author }}</a> 
