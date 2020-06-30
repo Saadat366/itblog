@@ -16,8 +16,8 @@
     <div>{{ article.text|linebreaks }}</div>
     <i>Автор - {{ article.author }}</i>
     <hr>
-    <h4>Дата публикации: {{ article.published|date:"d.m.Y" }} {{ article.published|time:"H:i" }}</h4>
-    <h4>Последнее изменение: {{ article.updated|date:"d.m.Y" }} {{ article.updated|time:"H:i" }}</h4>
+    <h4>Дата публикации: {{ article.published|date:"d.m.Y H:i" }}</h4>
+    <h4>Последнее изменение: {{ article.updated|date:"d.m.Y H:i" }}</h4>
     <h4>Понравилось: {{ article.likes }}</h4>
     <h4>Просмотрели: {{ article.views }}</h4>
     <h4>Прочитало: {{ article.readers.count }}</h4>
